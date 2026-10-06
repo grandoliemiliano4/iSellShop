@@ -2,13 +2,22 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Product } from '../core/domain/entities/product.entity';
 import productService from '../core/application/services/product.service';
 
-export function useProducts(page: number = 1, limit: number = 12, search: string = '', category: string = '', condition: string = '') {
+export function useProducts(
+  page: number = 1, 
+  limit: number = 12, 
+  search: string = '', 
+  category: string = '', 
+  condition: string = '',
+  minPrice?: number,
+  maxPrice?: number,
+  sortBy?: string
+) {
   const queryClient = useQueryClient();
 
   // 1. Fetching con useQuery
   const { data, isLoading, error, refetch } = useQuery({
-    queryKey: ['products', { page, limit, search, category, condition }],
-    queryFn: () => productService.getProducts(page, limit, search, category, condition),
+    queryKey: ['products', { page, limit, search, category, condition, minPrice, maxPrice, sortBy }],
+    queryFn: () => productService.getProducts(page, limit, search, category, condition, minPrice, maxPrice, sortBy),
   });
 
   const products = data?.data || [];

@@ -74,9 +74,14 @@ export class ProductsController {
     @Query('search') search?: string,
     @Query('category') category?: string,
     @Query('condition') condition?: string,
+    @Query('minPrice') minPrice?: string,
+    @Query('maxPrice') maxPrice?: string,
+    @Query('sortBy') sortBy?: string,
   ) {
     const pageNumber = page ? parseInt(page, 10) : 1;
     const limitNumber = limit ? parseInt(limit, 10) : 12;
+    const minPriceNumber = minPrice ? parseFloat(minPrice) : undefined;
+    const maxPriceNumber = maxPrice ? parseFloat(maxPrice) : undefined;
 
     return this.productsService.findAll(
       pageNumber,
@@ -84,6 +89,9 @@ export class ProductsController {
       search,
       category,
       condition,
+      minPriceNumber,
+      maxPriceNumber,
+      sortBy
     );
   }
 

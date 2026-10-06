@@ -44,4 +44,44 @@ export class CreateProductDto {
   @IsOptional()
   @IsString()
   color?: string;
+
+  // --- UsedProductDetail Fields ---
+  @IsOptional()
+  @IsString()
+  imei?: string;
+
+  @IsOptional()
+  @Type(() => Number)
+  @IsNumber()
+  bateria?: number;
+
+  @IsOptional()
+  microfono?: boolean;
+
+  @IsOptional()
+  pantalla?: boolean;
+
+  @IsOptional()
+  camara_trasera?: boolean;
+
+  @IsOptional()
+  camara_frontal?: boolean;
+
+  @IsOptional()
+  parlante?: boolean;
+
+  @IsOptional()
+  face_id?: boolean;
+
+  @IsOptional()
+  @IsString()
+  bordes?: string;
+
+  @IsOptional()
+  @IsString()
+  descripcion_usado?: string;
+
+  @IsOptional()
+  @IsString()
+  garantia_hasta?: string;
 }

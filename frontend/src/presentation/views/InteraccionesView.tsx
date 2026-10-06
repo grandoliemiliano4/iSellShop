@@ -5,10 +5,13 @@ import { useReservations } from "../../hooks/useReservations";
 import { Button } from "../ui/components/shadcn-ui/button";
 import { Plus } from "lucide-react";
 import { NuevaInteraccionUseCase } from "../use-cases/NuevaInteraccionUseCase";
+import { useAuthContext } from "../providers/AuthTokenProvider";
 
 export default function InteraccionesView() {
   const { reservations, isLoading, isError } = useReservations();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingReservation, setEditingReservation] = useState<any>(null);
+  const { userRole, userName } = useAuthContext();
 
   return (
     <div className="min-h-screen bg-black p-6">
@@ -100,9 +103,24 @@ export default function InteraccionesView() {
                       <td className="px-6 py-4 max-w-xs truncate" title={res.observations}>{res.observations || "-"}</td>
                       <td className="px-6 py-4">{new Date(res.reservedAt).toLocaleDateString()}</td>
                       <td className="px-6 py-4 text-right sticky right-0 bg-zinc-900/80 backdrop-blur-sm">
-                        <Button variant="outline" size="sm" className="bg-zinc-800 border-zinc-700 hover:bg-zinc-700">
-                          Ver Detalles
-                        </Button>
+                        <div className="flex justify-end gap-2">
+                          <Button variant="outline" size="sm" className="bg-zinc-800 border-zinc-700 hover:bg-zinc-700">
+                            Ver Detalles
+                          </Button>
+                          {(userRole === 'ADMIN' || res.user?.name === userName) && (
+                            <Button 
+                              variant="outline" 
+                              size="sm" 
+                              className="bg-indigo-600/20 text-indigo-400 border-indigo-500/30 hover:bg-indigo-600/30"
+                              onClick={() => {
+                                setEditingReservation(res);
+                                setIsModalOpen(true);
+                              }}
+                            >
+                              Editar
+                            </Button>
+                          )}
+                        </div>
                       </td>
                     </tr>
                   ))
@@ -115,7 +133,11 @@ export default function InteraccionesView() {
       
       <NuevaInteraccionUseCase 
         isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
+        onClose={() => {
+          setIsModalOpen(false);
+          setEditingReservation(null);
+        }}
+        editingReservation={editingReservation}
       />
     </div>
   );

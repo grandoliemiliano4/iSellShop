@@ -16,12 +16,18 @@ class ProductService {
     search: string = "",
     category: string = "",
     condition: string = "",
+    minPrice?: number,
+    maxPrice?: number,
+    sortBy?: string
   ): Promise<{ data: Product[]; total: number; lastPage: number }> {
     const params: any = { page, limit };
 
     if (search) params.search = search;
     if (category) params.category = category;
     if (condition) params.condition = condition;
+    if (minPrice !== undefined) params.minPrice = minPrice;
+    if (maxPrice !== undefined) params.maxPrice = maxPrice;
+    if (sortBy) params.sortBy = sortBy;
 
     const url = `/products`;
     const response = await httpClient.get<any>(url, { params });

@@ -12,6 +12,10 @@ interface ModalNuevaInteraccionProps {
   onProductSelect: (productId: number | null) => void;
   onClientSelect: (clientId: number | null) => void;
   onSave: (e: React.FormEvent) => void;
+  isEditing?: boolean;
+  userRole?: string | null;
+  initialProductName?: string;
+  initialClientName?: string;
 }
 
 export function ModalNuevaInteraccion({ 
@@ -21,15 +25,27 @@ export function ModalNuevaInteraccion({
   onChange, 
   onProductSelect,
   onClientSelect,
-  onSave 
+  onSave,
+  isEditing = false,
+  userRole,
+  initialProductName = "",
+  initialClientName = ""
 }: ModalNuevaInteraccionProps) {
   
   const [isProductModalOpen, setIsProductModalOpen] = useState(false);
   const [isClientModalOpen, setIsClientModalOpen] = useState(false);
 
-  // States just for displaying selected names (we could pass them from useCase but for simplicity we can just show ID if name is missing, or manage it here)
-  const [selectedProductName, setSelectedProductName] = useState("");
-  const [selectedClientName, setSelectedClientName] = useState("");
+  // States just for displaying selected names
+  const [selectedProductName, setSelectedProductName] = useState(initialProductName);
+  const [selectedClientName, setSelectedClientName] = useState(initialClientName);
+
+  // Sync state when modal opens or initial props change
+  React.useEffect(() => {
+    if (isOpen) {
+      setSelectedProductName(initialProductName);
+      setSelectedClientName(initialClientName);
+    }
+  }, [isOpen, initialProductName, initialClientName]);
 
   if (!isOpen) return null;
 
@@ -37,7 +53,7 @@ export function ModalNuevaInteraccion({
     <>
       <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
         <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-6 w-full max-w-2xl shadow-2xl max-h-[90vh] overflow-y-auto">
-          <h2 className="text-xl font-bold text-white mb-4">Nueva Interacción / Reserva</h2>
+          <h2 className="text-xl font-bold text-white mb-4">{isEditing ? 'Editar Interacción' : 'Nueva Interacción / Reserva'}</h2>
           
           <form onSubmit={onSave} className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -108,10 +124,19 @@ export function ModalNuevaInteraccion({
                 <label className="block text-sm font-medium text-zinc-300 mb-1">Descuento ($)</label>
                 <input type="number" step="0.01" name="descuento" value={formData.descuento} onChange={onChange} className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-2 text-white outline-none focus:border-purple-500" />
               </div>
-              <div>
-                <label className="block text-sm font-medium text-zinc-300 mb-1">Comisión ($)</label>
-                <input type="number" step="0.01" name="comision" value={formData.comision} onChange={onChange} className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-2 text-white outline-none focus:border-purple-500" />
-              </div>
+              
+              {userRole === 'ADMIN' && (
+                <>
+                  <div>
+                    <label className="block text-sm font-medium text-zinc-300 mb-1">Comisión ($)</label>
+                    <input type="number" step="0.01" name="comision" value={formData.comision} onChange={onChange} className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-2 text-white outline-none focus:border-purple-500" />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-zinc-300 mb-1">Creado el</label>
+                    <input type="date" name="reservedAt" value={formData.reservedAt} onChange={onChange} className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-2 text-white outline-none focus:border-purple-500 [color-scheme:dark]" />
+                  </div>
+                </>
+              )}
             </div>
 
             <div>

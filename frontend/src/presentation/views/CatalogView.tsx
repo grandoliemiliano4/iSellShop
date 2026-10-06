@@ -5,27 +5,41 @@ import { useSearchParams } from "next/navigation";
 import { ProductCard } from "../ui/components/ProductCard";
 import Pagination from "../ui/layouts/Pagination";
 import { useProducts } from "@/hooks/useProducts";
+import { Search, Filter, SlidersHorizontal, ChevronDown } from "lucide-react";
 
 export default function CatalogView() {
   const searchParams = useSearchParams();
   const [page, setPage] = useState(1);
 
-  const textFilter = searchParams.get("search") || "";
-  const categoryFilter = searchParams.get("category") || "";
-  const conditionFilter = searchParams.get("condition") || "";
+  // Filter States
+  const [localSearch, setLocalSearch] = useState(searchParams.get("search") || "");
+  const [localCategory, setLocalCategory] = useState(searchParams.get("category") || "");
+  const [localCondition, setLocalCondition] = useState(searchParams.get("condition") || "");
+  const [minPrice, setMinPrice] = useState<string>("");
+  const [maxPrice, setMaxPrice] = useState<string>("");
+  const [sortBy, setSortBy] = useState("recent");
+  
+  const [debouncedSearch, setDebouncedSearch] = useState(localSearch);
+
+  useEffect(() => {
+    const handler = setTimeout(() => setDebouncedSearch(localSearch), 500);
+    return () => clearTimeout(handler);
+  }, [localSearch]);
 
   useEffect(() => {
     setPage(1);
-  }, [textFilter, categoryFilter, conditionFilter]);
+  }, [debouncedSearch, localCategory, localCondition, minPrice, maxPrice, sortBy]);
 
-  // Limitamos a 12 (3 columnas x 4 filas)
   const limit = 12;
   const { products, isLoading, error, lastPage } = useProducts(
     page,
     limit,
-    textFilter,
-    categoryFilter,
-    conditionFilter,
+    debouncedSearch,
+    localCategory,
+    localCondition,
+    minPrice ? Number(minPrice) : undefined,
+    maxPrice ? Number(maxPrice) : undefined,
+    sortBy === 'recent' ? undefined : sortBy
   );
 
   const groupedProducts = React.useMemo(() => {
@@ -49,7 +63,7 @@ export default function CatalogView() {
   return (
     <div className="min-h-screen bg-black">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="mb-12 text-center">
+        <div className="mb-8 text-center">
           <h1 className="text-2xl md:text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-cyan-400 mb-4 tracking-tight">
             Nuestros Productos
           </h1>
@@ -59,7 +73,86 @@ export default function CatalogView() {
           </p>
         </div>
 
-        {/* El componente ProductSearch ha sido removido y movido al Header como modal */}
+        {/* Filter Bar */}
+        <div className="mb-10 bg-zinc-900/50 border border-zinc-800 rounded-2xl p-6 shadow-xl backdrop-blur-sm">
+          <div className="flex flex-col md:flex-row gap-6">
+            
+            {/* Search */}
+            <div className="flex-1">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 w-5 h-5" />
+                <input 
+                  type="text" 
+                  value={localSearch}
+                  onChange={(e) => setLocalSearch(e.target.value)}
+                  placeholder="Buscar modelos, colores, accesorios..." 
+                  className="w-full pl-10 pr-4 py-3 bg-black/50 border border-zinc-800 rounded-xl text-gray-200 focus:ring-2 focus:ring-purple-500/50 outline-none transition-all placeholder:text-zinc-600"
+                />
+              </div>
+            </div>
+
+            {/* Filters Row */}
+            <div className="flex flex-wrap md:flex-nowrap gap-4">
+              {/* Categoría */}
+              <select 
+                value={localCategory}
+                onChange={(e) => setLocalCategory(e.target.value)}
+                className="bg-black/50 border border-zinc-800 rounded-xl px-4 py-3 text-gray-300 focus:ring-2 focus:ring-purple-500/50 outline-none transition-all appearance-none cursor-pointer flex-1 md:w-40"
+              >
+                <option value="">Categorías</option>
+                <option value="iPhone">iPhone</option>
+                <option value="iPad">iPad</option>
+                <option value="MacBook">MacBook</option>
+                <option value="Samsung">Samsung</option>
+                <option value="Accesorios">Accesorios</option>
+              </select>
+
+              {/* Condición */}
+              <select 
+                value={localCondition}
+                onChange={(e) => setLocalCondition(e.target.value)}
+                className="bg-black/50 border border-zinc-800 rounded-xl px-4 py-3 text-gray-300 focus:ring-2 focus:ring-purple-500/50 outline-none transition-all appearance-none cursor-pointer flex-1 md:w-40"
+              >
+                <option value="">Condición</option>
+                <option value="NUEVO">Nuevo</option>
+                <option value="USADO">Usado</option>
+              </select>
+
+              {/* Rango de Precios */}
+              <div className="flex items-center gap-2 flex-1 md:w-auto">
+                <input 
+                  type="number" 
+                  placeholder="Min $" 
+                  value={minPrice}
+                  onChange={e => setMinPrice(e.target.value)}
+                  className="w-24 bg-black/50 border border-zinc-800 rounded-xl px-3 py-3 text-gray-300 focus:ring-2 focus:ring-purple-500/50 outline-none transition-all placeholder:text-zinc-600"
+                />
+                <span className="text-zinc-600">-</span>
+                <input 
+                  type="number" 
+                  placeholder="Max $" 
+                  value={maxPrice}
+                  onChange={e => setMaxPrice(e.target.value)}
+                  className="w-24 bg-black/50 border border-zinc-800 rounded-xl px-3 py-3 text-gray-300 focus:ring-2 focus:ring-purple-500/50 outline-none transition-all placeholder:text-zinc-600"
+                />
+              </div>
+
+              {/* Ordenar Por */}
+              <div className="relative flex-1 md:w-48">
+                <SlidersHorizontal className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 w-4 h-4" />
+                <select 
+                  value={sortBy}
+                  onChange={(e) => setSortBy(e.target.value)}
+                  className="w-full bg-black/50 border border-zinc-800 rounded-xl pl-9 pr-4 py-3 text-gray-300 focus:ring-2 focus:ring-purple-500/50 outline-none transition-all appearance-none cursor-pointer"
+                >
+                  <option value="recent">Más recientes</option>
+                  <option value="price_asc">Menor precio</option>
+                  <option value="price_desc">Mayor precio</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
 
         {isLoading ? (
           <div className="flex justify-center items-center py-20">

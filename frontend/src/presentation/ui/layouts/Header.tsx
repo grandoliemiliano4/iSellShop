@@ -65,10 +65,10 @@ export default function Header({ onMenuToggle }: HeaderProps) {
             onMouseEnter={() => setIsProductsDropdownOpen(true)}
             onMouseLeave={() => setIsProductsDropdownOpen(false)}
           >
-            <button className="flex items-center gap-1 text-sm font-medium text-zinc-300 hover:text-white transition-colors py-2">
+            <Link href="/products" className="flex items-center gap-1 text-sm font-medium text-zinc-300 hover:text-white transition-colors py-2">
               Productos
               <ChevronDown className={`w-4 h-4 transition-transform ${isProductsDropdownOpen ? 'rotate-180' : ''}`} />
-            </button>
+            </Link>
 
             {isProductsDropdownOpen && (
               <div className="absolute top-full left-1/2 -translate-x-1/2 mt-0 w-56 bg-zinc-900 border border-zinc-800 rounded-xl shadow-xl py-2 animate-in fade-in zoom-in-95 duration-200">
