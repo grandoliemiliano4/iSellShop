@@ -19,17 +19,6 @@ interface ProductsManagerViewProps {
     stock?: number | string;
     capacity?: string;
     color?: string;
-    imei?: string;
-    bateria?: number | string;
-    microfono?: boolean;
-    pantalla?: boolean;
-    camara_trasera?: boolean;
-    camara_frontal?: boolean;
-    parlante?: boolean;
-    face_id?: boolean;
-    bordes?: string;
-    descripcion_usado?: string;
-    garantia_hasta?: string;
   };
   isModalOpen: boolean;
   setFormData: (data: any) => void;
@@ -129,9 +118,7 @@ export function ProductsManagerView({
             {
               header: "Stock",
               cell: (product) => (
-                <span
-                  className={`font-semibold text-zinc-300`}
-                >
+                <span className={`font-semibold text-zinc-300`}>
                   {product.stock ?? 1}
                 </span>
               ),
