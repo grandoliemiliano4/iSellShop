@@ -1,0 +1,98 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+}
+
+model user {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String   @unique(map: "User_email_key")
+  password  String
+  role      String   @default("user")
+  reservations Reservation[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Product {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String
+  price       Float
+  image       String
+  category    String
+  condition   String   @default("NUEVO")
+  stock       Int      @default(1)
+  
+  capacity    String?
+  color       String?
+  
+  usedDetail  UsedProductDetail?
+  reservations Reservation[]
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model UsedProductDetail {
+  id              Int      @id @default(autoincrement())
+  productId       Int      @unique
+  product         Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  
+  imei            String   @unique
+  bateria         Int      
+  microfono       Boolean  @default(true)
+  pantalla        Boolean  @default(true)
+  camara_trasera  Boolean  @default(true)
+  camara_frontal  Boolean  @default(true)
+  parlante        Boolean  @default(true)
+  face_id         Boolean  @default(true)
+  bordes          String   @default("NORMAL")
+  descripcion     String?  @db.Text
+  
+  garantia_hasta  DateTime?
+  fecha_ingreso   DateTime @default(now())
+  fecha_egreso    DateTime?
+}
+
+model Client {
+  id        Int      @id @default(autoincrement())
+  nombre    String
+  tel       String?
+  ciudad    String?
+  dni       String?
+  sexo      String?
+
+  reservations Reservation[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Reservation {
+  id          Int      @id @default(autoincrement())
+  
+  productId   Int
+  product     Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  
+  userId      Int
+  user        user     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  clientId    Int
+  client      Client   @relation(fields: [clientId], references: [id], onDelete: Cascade)
+
+  status            String    @default("Pendiente") 
+  observations      String?   @db.Text
+  tipo_interaccion  String    @default("Personal")
+  canal_venta       String?
+  date_retiro       DateTime?
+  descuento         Float?
+  comision          Float?
+  
+  last_modification DateTime  @updatedAt
+  reservedAt        DateTime  @default(now())
+  expiresAt         DateTime 
+}

@@ -1,0 +1,79 @@
+"use strict";
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.CreateProductDto = void 0;
+const class_validator_1 = require("class-validator");
+const class_transformer_1 = require("class-transformer");
+const swagger_1 = require("@nestjs/swagger");
+class CreateProductDto {
+    name;
+    description;
+    price;
+    image;
+    category;
+    condition;
+    stock;
+    capacity;
+    color;
+}
+exports.CreateProductDto = CreateProductDto;
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: 'El nombre del producto', example: 'iPhone 15 Pro' }),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], CreateProductDto.prototype, "name", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: 'Descripción detallada', example: 'El mejor iPhone creado por Apple.' }),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], CreateProductDto.prototype, "description", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: 'Precio del producto en dólares', example: 999.99 }),
+    (0, class_transformer_1.Type)(() => Number),
+    (0, class_validator_1.IsNumber)(),
+    __metadata("design:type", Number)
+], CreateProductDto.prototype, "price", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: 'URL o path de la imagen', example: '/uploads/iphone.jpg', required: false }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], CreateProductDto.prototype, "image", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: 'Marca o categoría del equipo', example: 'iPhone' }),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], CreateProductDto.prototype, "category", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: 'Condición del equipo', example: 'NUEVO' }),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], CreateProductDto.prototype, "condition", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: 'Stock disponible', example: 1, required: false }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_transformer_1.Type)(() => Number),
+    (0, class_validator_1.IsNumber)(),
+    __metadata("design:type", Number)
+], CreateProductDto.prototype, "stock", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: 'Capacidad del equipo', example: '256', required: false }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsIn)(['16', '32', '64', '128', '256', '512', '1024']),
+    __metadata("design:type", String)
+], CreateProductDto.prototype, "capacity", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: 'Color del equipo', example: 'Natural Titanium', required: false }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], CreateProductDto.prototype, "color", void 0);
+//# sourceMappingURL=create-product.dto.js.map
