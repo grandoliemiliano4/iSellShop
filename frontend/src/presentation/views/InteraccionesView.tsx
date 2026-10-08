@@ -7,37 +7,50 @@ import { Plus } from "lucide-react";
 import { NuevaInteraccionUseCase } from "../use-cases/NuevaInteraccionUseCase";
 import { useAuthContext } from "../providers/AuthTokenProvider";
 
-export default function InteraccionesView() {
-  const { reservations, isLoading, isError } = useReservations();
+export default function InteraccionesView({
+  hideHeader = false,
+  filteredReservations,
+}: {
+  hideHeader?: boolean;
+  filteredReservations?: any[];
+}) {
+  const {
+    reservations: allReservations,
+    isLoading,
+    isError,
+  } = useReservations();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingReservation, setEditingReservation] = useState<any>(null);
   const { userRole, userName } = useAuthContext();
 
+  const reservations = filteredReservations || allReservations;
+
   return (
-    <div className="min-h-screen bg-black p-6">
+    <div className={`${hideHeader ? "" : "min-h-screen bg-[#FBFBFD] p-6"}`}>
       <div className="max-w-7xl mx-auto space-y-6">
-        {/* Header */}
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-          <div>
-            <h1 className="text-2xl font-bold text-white">Interacciones</h1>
-            <p className="text-sm text-zinc-400">
-              Gestiona todas las reservas e interacciones con clientes.
-            </p>
+        {!hideHeader && (
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <div>
+              <h1 className="text-2xl font-bold text-black">Interacciones</h1>
+              <p className="text-sm text-gray-500">
+                Gestiona todas las reservas e interacciones con clientes.
+              </p>
+            </div>
+            <Button
+              onClick={() => setIsModalOpen(true)}
+              className="bg-cyan-600 hover:bg-cyan-500 text-white"
+            >
+              <Plus className="w-4 h-4 mr-2" />
+              Nueva Interacción
+            </Button>
           </div>
-          <Button 
-            onClick={() => setIsModalOpen(true)}
-            className="bg-purple-600 hover:bg-purple-700 text-white"
-          >
-            <Plus className="w-4 h-4 mr-2" />
-            Nueva Interacción
-          </Button>
-        </div>
+        )}
 
         {/* Tabla */}
-        <div className="bg-zinc-900 border border-zinc-800 rounded-xl overflow-hidden">
+        <div className="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm">
           <div className="overflow-x-auto">
-            <table className="w-full text-sm text-left text-zinc-300 whitespace-nowrap">
-              <thead className="text-xs text-zinc-400 uppercase bg-zinc-950/50 border-b border-zinc-800">
+            <table className="w-full text-sm text-left text-gray-600 whitespace-nowrap">
+              <thead className="text-xs text-gray-500 uppercase bg-gray-50 border-b border-gray-200">
                 <tr>
                   <th className="px-6 py-4">ID</th>
                   <th className="px-6 py-4">Producto</th>
@@ -57,7 +70,7 @@ export default function InteraccionesView() {
               <tbody>
                 {isLoading ? (
                   <tr>
-                    <td colSpan={13} className="text-center py-8 text-zinc-500">
+                    <td colSpan={13} className="text-center py-8 text-gray-500">
                       Cargando interacciones...
                     </td>
                   </tr>
@@ -69,49 +82,81 @@ export default function InteraccionesView() {
                   </tr>
                 ) : reservations.length === 0 ? (
                   <tr>
-                    <td colSpan={13} className="text-center py-8 text-zinc-500">
+                    <td colSpan={13} className="text-center py-8 text-gray-500">
                       No hay interacciones registradas.
                     </td>
                   </tr>
                 ) : (
                   reservations.map((res) => (
-                    <tr key={res.id} className="border-b border-zinc-800 hover:bg-zinc-800/50 transition-colors">
-                      <td className="px-6 py-4 font-medium">#{res.id}</td>
+                    <tr
+                      key={res.id}
+                      className="border-b border-gray-100 hover:bg-gray-50 transition-colors"
+                    >
+                      <td className="px-6 py-4 font-medium text-black">#{res.id}</td>
                       <td className="px-6 py-4">
                         {res.product?.name || "N/A"}
-                        {res.product?.capacity ? ` ${res.product.capacity}GB` : ""}
+                        {res.product?.capacity
+                          ? ` ${res.product.capacity}GB`
+                          : ""}
                         {res.product?.color ? ` - ${res.product.color}` : ""}
                       </td>
-                      <td className="px-6 py-4">{res.client?.nombre || "N/A"}</td>
+                      <td className="px-6 py-4">
+                        {res.client?.nombre || "N/A"}
+                      </td>
                       <td className="px-6 py-4">{res.user?.name || "N/A"}</td>
                       <td className="px-6 py-4">
-                        <span className={`px-2 py-1 rounded-full text-xs font-medium border ${
-                          res.status.toLowerCase() === 'finalizado' ? 'bg-green-900/20 text-green-400 border-green-500/30' :
-                          res.status.toLowerCase() === 'cancelado' ? 'bg-red-900/20 text-red-400 border-red-500/30' :
-                          'bg-amber-900/20 text-amber-400 border-amber-500/30'
-                        }`}>
+                        <span
+                          className={`px-2 py-1 rounded-full text-xs font-medium border ${
+                            res.status.toLowerCase() === "finalizado"
+                              ? "bg-green-50 text-green-700 border-green-200"
+                              : res.status.toLowerCase() === "cancelado"
+                                ? "bg-red-50 text-red-700 border-red-200"
+                                : "bg-amber-50 text-amber-700 border-amber-200"
+                          }`}
+                        >
                           {res.status}
                         </span>
                       </td>
                       <td className="px-6 py-4">{res.tipo_interaccion}</td>
                       <td className="px-6 py-4">
-                        {res.date_retiro ? new Date(res.date_retiro).toLocaleString([], { dateStyle: 'short', timeStyle: 'short' }) : "No definida"}
+                        {res.date_retiro
+                          ? new Date(res.date_retiro).toLocaleString([], {
+                              dateStyle: "short",
+                              timeStyle: "short",
+                            })
+                          : "No definida"}
                       </td>
                       <td className="px-6 py-4">{res.canal_venta || "-"}</td>
-                      <td className="px-6 py-4">{res.descuento ? `$${res.descuento}` : "-"}</td>
-                      <td className="px-6 py-4">{res.comision ? `$${res.comision}` : "-"}</td>
-                      <td className="px-6 py-4 max-w-xs truncate" title={res.observations}>{res.observations || "-"}</td>
-                      <td className="px-6 py-4">{new Date(res.reservedAt).toLocaleDateString()}</td>
-                      <td className="px-6 py-4 text-right sticky right-0 bg-zinc-900/80 backdrop-blur-sm">
+                      <td className="px-6 py-4">
+                        {res.descuento ? `$${res.descuento}` : "-"}
+                      </td>
+                      <td className="px-6 py-4">
+                        {res.comision ? `$${res.comision}` : "-"}
+                      </td>
+                      <td
+                        className="px-6 py-4 max-w-xs truncate"
+                        title={res.observations}
+                      >
+                        {res.observations || "-"}
+                      </td>
+                      <td className="px-6 py-4">
+                        {new Date(res.reservedAt).toLocaleDateString()}
+                      </td>
+                      <td className="px-6 py-4 text-right sticky right-0 bg-white/90 backdrop-blur-sm">
                         <div className="flex justify-end gap-2">
-                          <Button variant="outline" size="sm" className="bg-zinc-800 border-zinc-700 hover:bg-zinc-700">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="bg-white border-gray-200 hover:bg-gray-100 text-gray-700"
+                          >
                             Ver Detalles
                           </Button>
-                          {(userRole === 'ADMIN' || res.user?.name === userName) && (
-                            <Button 
-                              variant="outline" 
-                              size="sm" 
-                              className="bg-indigo-600/20 text-indigo-400 border-indigo-500/30 hover:bg-indigo-600/30"
+                          {(userRole === "ADMIN" ||
+                            res.user?.name === userName) && (
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              className="bg-cyan-50 text-cyan-600 border-cyan-200 hover:bg-cyan-100"
                               onClick={() => {
                                 setEditingReservation(res);
                                 setIsModalOpen(true);
@@ -130,8 +175,8 @@ export default function InteraccionesView() {
           </div>
         </div>
       </div>
-      
-      <NuevaInteraccionUseCase 
+
+      <NuevaInteraccionUseCase
         isOpen={isModalOpen}
         onClose={() => {
           setIsModalOpen(false);

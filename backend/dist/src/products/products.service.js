@@ -73,10 +73,31 @@ let ProductsService = class ProductsService {
         return `/uploads/${file.filename}`;
     }
     async create(createProductDto) {
+        const { imei, bateria, microfono, pantalla, camara_trasera, camara_frontal, parlante, face_id, bordes, descripcion_usado, garantia_hasta, ...productData } = createProductDto;
+        if (productData.condition === 'USADO' && !imei) {
+            throw new common_1.BadRequestException('El IMEI es obligatorio para equipos usados.');
+        }
         return this.prisma.product.create({
             data: {
-                ...createProductDto,
-                image: createProductDto.image || '',
+                ...productData,
+                image: productData.image || '',
+                ...(productData.condition === 'USADO' && {
+                    usedDetail: {
+                        create: {
+                            imei: imei,
+                            bateria: bateria ?? 100,
+                            microfono: microfono ?? true,
+                            pantalla: pantalla ?? true,
+                            camara_trasera: camara_trasera ?? true,
+                            camara_frontal: camara_frontal ?? true,
+                            parlante: parlante ?? true,
+                            face_id: face_id ?? true,
+                            bordes: bordes || 'NORMAL',
+                            descripcion: descripcion_usado || null,
+                            garantia_hasta: garantia_hasta ? new Date(garantia_hasta) : null,
+                        }
+                    }
+                })
             },
         });
     }
@@ -88,7 +109,7 @@ let ProductsService = class ProductsService {
             })),
         });
     }
-    async findAll(page = 1, limit = 12, search, category, condition) {
+    async findAll(page = 1, limit = 12, search, category, condition, minPrice, maxPrice, sortBy) {
         const skip = (page - 1) * limit;
         const where = {
             NOT: {
@@ -110,15 +131,31 @@ let ProductsService = class ProductsService {
         if (condition) {
             where.condition = condition;
         }
+        if (minPrice !== undefined || maxPrice !== undefined) {
+            where.price = {};
+            if (minPrice !== undefined)
+                where.price.gte = minPrice;
+            if (maxPrice !== undefined)
+                where.price.lte = maxPrice;
+        }
+        let orderBy = { createdAt: 'desc' };
+        if (sortBy === 'price_asc') {
+            orderBy = { price: 'asc' };
+        }
+        else if (sortBy === 'price_desc') {
+            orderBy = { price: 'desc' };
+        }
         const [data, total] = await Promise.all([
             this.prisma.product.findMany({
                 where,
                 skip,
                 take: limit,
+                orderBy,
                 include: {
                     reservations: {
                         where: { status: 'Reservó' }
-                    }
+                    },
+                    usedDetail: true
                 }
             }),
             this.prisma.product.count({ where }),
@@ -145,6 +182,7 @@ let ProductsService = class ProductsService {
     async findOne(id) {
         const product = await this.prisma.product.findUnique({
             where: { id },
+            include: { usedDetail: true }
         });
         if (!product) {
             throw new common_1.NotFoundException(`Product with ID ${id} not found`);
@@ -153,9 +191,52 @@ let ProductsService = class ProductsService {
     }
     async update(id, updateProductDto) {
         await this.findOne(id);
+        const { imei, bateria, microfono, pantalla, camara_trasera, camara_frontal, parlante, face_id, bordes, descripcion_usado, garantia_hasta, ...productData } = updateProductDto;
+        if (productData.condition === 'USADO' && !imei) {
+            throw new common_1.BadRequestException('El IMEI es obligatorio para equipos usados.');
+        }
         return this.prisma.product.update({
             where: { id },
-            data: updateProductDto,
+            data: {
+                ...productData,
+                ...(productData.condition === 'USADO' && {
+                    usedDetail: {
+                        upsert: {
+                            create: {
+                                imei: imei,
+                                bateria: bateria ?? 100,
+                                microfono: microfono ?? true,
+                                pantalla: pantalla ?? true,
+                                camara_trasera: camara_trasera ?? true,
+                                camara_frontal: camara_frontal ?? true,
+                                parlante: parlante ?? true,
+                                face_id: face_id ?? true,
+                                bordes: bordes || 'NORMAL',
+                                descripcion: descripcion_usado || null,
+                                garantia_hasta: garantia_hasta ? new Date(garantia_hasta) : null,
+                            },
+                            update: {
+                                ...(imei && { imei }),
+                                ...(bateria !== undefined && { bateria }),
+                                ...(microfono !== undefined && { microfono }),
+                                ...(pantalla !== undefined && { pantalla }),
+                                ...(camara_trasera !== undefined && { camara_trasera }),
+                                ...(camara_frontal !== undefined && { camara_frontal }),
+                                ...(parlante !== undefined && { parlante }),
+                                ...(face_id !== undefined && { face_id }),
+                                ...(bordes && { bordes }),
+                                ...(descripcion_usado !== undefined && { descripcion: descripcion_usado }),
+                                ...(garantia_hasta !== undefined && { garantia_hasta: garantia_hasta ? new Date(garantia_hasta) : null }),
+                            }
+                        }
+                    }
+                }),
+                ...(productData.condition === 'NUEVO' && {
+                    usedDetail: {
+                        delete: true
+                    }
+                }).valueOf() ? {} : {}
+            },
         });
     }
     async remove(id) {

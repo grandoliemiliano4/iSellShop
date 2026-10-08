@@ -1,5 +1,5 @@
 import { IsString, IsNumber, IsOptional, IsIn } from "class-validator";
-import { Type } from "class-transformer";
+import { Type, Transform } from "class-transformer";
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateProductDto {
@@ -56,21 +56,27 @@ export class CreateProductDto {
   bateria?: number;
 
   @IsOptional()
+  @Transform(({ value }) => value === 'true' || value === true)
   microfono?: boolean;
 
   @IsOptional()
+  @Transform(({ value }) => value === 'true' || value === true)
   pantalla?: boolean;
 
   @IsOptional()
+  @Transform(({ value }) => value === 'true' || value === true)
   camara_trasera?: boolean;
 
   @IsOptional()
+  @Transform(({ value }) => value === 'true' || value === true)
   camara_frontal?: boolean;
 
   @IsOptional()
+  @Transform(({ value }) => value === 'true' || value === true)
   parlante?: boolean;
 
   @IsOptional()
+  @Transform(({ value }) => value === 'true' || value === true)
   face_id?: boolean;
 
   @IsOptional()

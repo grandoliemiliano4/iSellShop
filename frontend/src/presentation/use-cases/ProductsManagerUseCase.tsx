@@ -1,30 +1,47 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { useSearchParams, useRouter, usePathname } from 'next/navigation';
-import { useProducts } from '@/hooks/useProducts';
-import { Product } from '../../core/domain/entities/product.entity';
-import { ProductsManagerView } from '../views/ProductsManagerView';
+import { useState, useEffect } from "react";
+import { useSearchParams, useRouter, usePathname } from "next/navigation";
+import { useProducts } from "@/hooks/useProducts";
+import { Product } from "../../core/domain/entities/product.entity";
+import { ProductsManagerView } from "../views/ProductsManagerView";
 
 export function ProductsManagerUseCase() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
-  const editProductId = searchParams.get('editProduct');
+  const editProductId = searchParams.get("editProduct");
   const [hasAutoOpened, setHasAutoOpened] = useState(false);
-  
-  const { products, isLoading, saveProduct, deleteProduct } = useProducts(1, 50);
+
+  const { products, isLoading, saveProduct, deleteProduct } = useProducts(
+    1,
+    50,
+  );
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
-  
+
   const [formData, setFormData] = useState({
-    name: '',
-    description: '',
-    price: '',
+    name: "",
+    description: "",
+    price: "",
     image: null as File | string | null,
-    category: '',
-    condition: ''
+    category: "",
+    condition: "",
+    stock: "",
+    capacity: "",
+    color: "",
+    imei: "",
+    bateria: "",
+    bordes: "NORMAL",
+    microfono: true,
+    pantalla: true,
+    camara_trasera: true,
+    camara_frontal: true,
+    parlante: true,
+    face_id: true,
+    descripcion_usado: "",
+    garantia_hasta: "",
   });
-  
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
@@ -36,15 +53,17 @@ export function ProductsManagerUseCase() {
 
   useEffect(() => {
     if (editProductId && products.length > 0 && !hasAutoOpened) {
-      const product = products.find(p => p.id === Number(editProductId));
+      const product = products.find((p) => p.id === Number(editProductId));
       if (product) {
         openModal(product);
         setHasAutoOpened(true);
-        
+
         // Limpiar URL para que no se reabra al recargar
         const newSearchParams = new URLSearchParams(searchParams.toString());
-        newSearchParams.delete('editProduct');
-        router.replace(`${pathname}?${newSearchParams.toString()}`, { scroll: false });
+        newSearchParams.delete("editProduct");
+        router.replace(`${pathname}?${newSearchParams.toString()}`, {
+          scroll: false,
+        });
       }
     }
   }, [editProductId, products, hasAutoOpened, router, pathname, searchParams]);
@@ -58,12 +77,51 @@ export function ProductsManagerUseCase() {
         description: product.description,
         price: product.price.toString(),
         image: product.image,
-        category: product.category || '',
-        condition: product.condition || ''
+        category: product.category || "",
+        condition: product.condition || "",
+        stock: product.stock?.toString() || "",
+        capacity: product.capacity || "",
+        color: product.color || "",
+        imei: product.usedDetail?.imei || "",
+        bateria: product.usedDetail?.bateria?.toString() || "",
+        bordes: product.usedDetail?.bordes || "NORMAL",
+        microfono: product.usedDetail?.microfono ?? true,
+        pantalla: product.usedDetail?.pantalla ?? true,
+        camara_trasera: product.usedDetail?.camara_trasera ?? true,
+        camara_frontal: product.usedDetail?.camara_frontal ?? true,
+        parlante: product.usedDetail?.parlante ?? true,
+        face_id: product.usedDetail?.face_id ?? true,
+        descripcion_usado: product.usedDetail?.descripcion || "",
+        garantia_hasta: product.usedDetail?.garantia_hasta
+          ? new Date(product.usedDetail.garantia_hasta)
+              .toISOString()
+              .slice(0, 10)
+          : "",
       });
     } else {
       setEditingProduct(null);
-      setFormData({ name: '', description: '', price: '', image: null, category: '', condition: '' });
+      setFormData({
+        name: "",
+        description: "",
+        price: "",
+        image: null,
+        category: "",
+        condition: "",
+        stock: "",
+        capacity: "",
+        color: "",
+        imei: "",
+        bateria: "",
+        bordes: "NORMAL",
+        microfono: true,
+        pantalla: true,
+        camara_trasera: true,
+        camara_frontal: true,
+        parlante: true,
+        face_id: true,
+        descripcion_usado: "",
+        garantia_hasta: "",
+      });
     }
     setIsModalOpen(true);
   };
@@ -78,7 +136,20 @@ export function ProductsManagerUseCase() {
     e.preventDefault();
     setIsSubmitting(true);
     try {
-      await saveProduct({ ...formData, price: Number(formData.price), id: editingProduct?.id });
+      const payload: any = {
+        ...formData,
+        price: Number(formData.price),
+        stock: formData.stock ? Number(formData.stock) : 1,
+        id: editingProduct?.id,
+      };
+
+      if (formData.condition === "USADO") {
+        payload.bateria = formData.bateria
+          ? Number(formData.bateria)
+          : undefined;
+      }
+
+      await saveProduct(payload);
       setIsSuccess(true);
       // Opcional: auto cerrar después de 2s
       setTimeout(() => {
@@ -90,6 +161,8 @@ export function ProductsManagerUseCase() {
       setIsSubmitting(false);
     }
   };
+
+  const [detailProduct, setDetailProduct] = useState<Product | null>(null);
 
   const openDeleteModal = (product: Product) => {
     setIsDeleteSuccess(false);
@@ -133,23 +206,15 @@ export function ProductsManagerUseCase() {
       handleDelete={openDeleteModal}
       isSubmitting={isSubmitting}
       isSuccess={isSuccess}
-      
+      detailProduct={detailProduct}
+      setDetailProduct={setDetailProduct}
       isDeleteModalOpen={isDeleteModalOpen}
       closeDeleteModal={closeDeleteModal}
       productToDelete={productToDelete}
       confirmDelete={confirmDelete}
       isDeleting={isDeleting}
       isDeleteSuccess={isDeleteSuccess}
-      
-      isFormDirty={
-        !editingProduct || 
-        formData.name !== editingProduct.name ||
-        formData.description !== editingProduct.description ||
-        formData.price !== editingProduct.price.toString() ||
-        formData.image !== editingProduct.image ||
-        formData.category !== (editingProduct.category || '') ||
-        formData.condition !== (editingProduct.condition || '')
-      }
+      isFormDirty={true}
     />
   );
 }

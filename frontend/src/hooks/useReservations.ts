@@ -1,27 +1,28 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import reservationsService from '../core/application/services/reservations.service';
-import { CreateReservationPayload } from '../core/domain/entities/reservation.entity';
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import reservationsService from "../core/application/services/reservations.service";
+import { CreateReservationPayload } from "../core/domain/entities/reservation.entity";
 
 export function useReservations() {
   const queryClient = useQueryClient();
 
   const query = useQuery({
-    queryKey: ['reservations'],
+    queryKey: ["reservations"],
     queryFn: () => reservationsService.getReservations(),
   });
 
   const createMutation = useMutation({
-    mutationFn: (newReservation: CreateReservationPayload) => reservationsService.createReservation(newReservation),
+    mutationFn: (newReservation: CreateReservationPayload) =>
+      reservationsService.createReservation(newReservation),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['reservations'] });
-      // También podríamos invalidar products si reservarlo cambia el stock
+      queryClient.invalidateQueries({ queryKey: ["reservations"] });
     },
   });
 
   const updateStatusMutation = useMutation({
-    mutationFn: ({ id, status }: { id: number; status: string }) => reservationsService.updateReservationStatus(id, status),
+    mutationFn: ({ id, status }: { id: number; status: string }) =>
+      reservationsService.updateReservationStatus(id, status),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['reservations'] });
+      queryClient.invalidateQueries({ queryKey: ["reservations"] });
     },
   });
 

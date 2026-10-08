@@ -135,7 +135,8 @@ export class ProductsService {
         include: {
           reservations: {
             where: { status: 'Reservó' }
-          }
+          },
+          usedDetail: true
         }
       }),
       this.prisma.product.count({ where }),
@@ -166,6 +167,7 @@ export class ProductsService {
   async findOne(id: number) {
     const product = await this.prisma.product.findUnique({
       where: { id },
+      include: { usedDetail: true }
     });
     if (!product) {
       throw new NotFoundException(`Product with ID ${id} not found`);
@@ -225,8 +227,7 @@ export class ProductsService {
         }),
         ...(productData.condition === 'NUEVO' && {
           usedDetail: {
-            delete: true // Will throw if doesn't exist, we can ignore or use another approach, wait, let's just leave it or handle it carefully.
-          }
+            delete: true 
         }).valueOf() ? {} : {} // If changing USADO to NUEVO we probably want to delete, but for now Prisma's cascade or ignore is safer.
         // Actually I won't delete it just in case, or I can safely do it. Let's just leave it as is if it changes to NUEVO.
       },
@@ -234,7 +235,6 @@ export class ProductsService {
   }
 
   async remove(id: number) {
-    // Check if it exists first
     await this.findOne(id);
     return this.prisma.product.delete({
       where: { id },

@@ -37,6 +37,7 @@ export declare class ClientsService {
             date_retiro: Date | null;
             descuento: number | null;
             comision: number | null;
+            total: number | null;
             last_modification: Date;
             reservedAt: Date;
             expiresAt: Date;

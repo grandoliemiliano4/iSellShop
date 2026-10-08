@@ -15,19 +15,19 @@ export default function Pagination({ currentPage, lastPage, onPageChange }: Pagi
       <button
         onClick={() => onPageChange(currentPage - 1)}
         disabled={currentPage === 1}
-        className="px-4 py-2 bg-gray-800 text-white rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-700 transition-colors"
+        className="px-4 py-2 bg-white text-black border border-gray-200 shadow-sm rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 transition-colors font-medium"
       >
         Anterior
       </button>
 
-      <span className="text-gray-300 font-medium">
+      <span className="text-gray-600 font-medium">
         Página {currentPage} de {lastPage}
       </span>
 
       <button
         onClick={() => onPageChange(currentPage + 1)}
         disabled={currentPage === lastPage}
-        className="px-4 py-2 bg-purple-600 text-white rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-purple-500 transition-colors"
+        className="px-4 py-2 bg-cyan-600 text-white shadow-sm rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-cyan-500 transition-colors font-medium"
       >
         Siguiente
       </button>

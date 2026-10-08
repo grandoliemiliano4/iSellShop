@@ -21,6 +21,7 @@ interface DataTableProps<T> {
   isLoading?: boolean;
   emptyMessage?: string;
   keyExtractor: (item: T) => string | number;
+  onRowClick?: (item: T) => void;
 }
 
 export function DataTable<T>({
@@ -29,14 +30,15 @@ export function DataTable<T>({
   isLoading,
   emptyMessage = "No hay resultados.",
   keyExtractor,
+  onRowClick,
 }: DataTableProps<T>) {
   return (
-    <div className="rounded-md border border-zinc-800 bg-zinc-900/50 shadow-lg">
+    <div className="rounded-md border border-gray-200 bg-white shadow-sm overflow-hidden">
       <Table>
         <TableHeader>
-          <TableRow className="bg-zinc-800/50 hover:bg-zinc-800/50">
+          <TableRow className="bg-gray-50 hover:bg-gray-50 border-b border-gray-200">
             {columns.map((col, idx) => (
-              <TableHead key={idx} className={col.className}>
+              <TableHead key={idx} className={`text-gray-500 font-medium ${col.className || ''}`}>
                 {col.header}
               </TableHead>
             ))}
@@ -63,14 +65,20 @@ export function DataTable<T>({
             </TableRow>
           ) : (
             data.map((item) => (
-              <TableRow key={keyExtractor(item)}>
+              <TableRow
+                key={keyExtractor(item)}
+                onClick={() => onRowClick && onRowClick(item)}
+                className={`border-b border-gray-100 transition-colors ${
+                  onRowClick ? "cursor-pointer hover:bg-gray-50" : "hover:bg-transparent"
+                }`}
+              >
                 {columns.map((col, idx) => (
                   <TableCell key={idx} className={col.className}>
                     {col.cell
                       ? col.cell(item)
                       : col.accessorKey
-                      ? (item[col.accessorKey] as React.ReactNode)
-                      : null}
+                        ? (item[col.accessorKey] as React.ReactNode)
+                        : null}
                   </TableCell>
                 ))}
               </TableRow>

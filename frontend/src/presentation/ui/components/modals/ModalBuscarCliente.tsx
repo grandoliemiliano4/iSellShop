@@ -52,13 +52,13 @@ export function ModalBuscarCliente({ isOpen, onClose, onSelect }: ModalBuscarCli
 
   return (
     <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[60] flex items-center justify-center p-4">
-      <div className="bg-zinc-900 border border-zinc-800 rounded-xl w-full max-w-lg shadow-2xl flex flex-col h-[70vh] max-h-[700px]">
+      <div className="bg-white border border-gray-200 rounded-xl w-full max-w-lg shadow-2xl flex flex-col h-[70vh] max-h-[700px]">
         
-        <div className="flex items-center justify-between p-4 border-b border-zinc-800">
-          <h2 className="text-lg font-bold text-white">
+        <div className="flex items-center justify-between p-4 border-b border-gray-200">
+          <h2 className="text-lg font-bold text-black">
             {isCreatingClient ? "Nuevo Cliente" : "Buscar Cliente"}
           </h2>
-          <button onClick={onClose} className="text-zinc-400 hover:text-white">
+          <button onClick={onClose} className="text-gray-400 hover:text-black">
             <X className="w-5 h-5" />
           </button>
         </div>
@@ -66,46 +66,46 @@ export function ModalBuscarCliente({ isOpen, onClose, onSelect }: ModalBuscarCli
         {isCreatingClient ? (
           <div className="p-4 flex-1 overflow-y-auto space-y-4">
             <div>
-              <label className="block text-sm font-medium text-zinc-300 mb-1">Nombre Completo *</label>
-              <input type="text" value={newClient.nombre} onChange={e => setNewClient(prev => ({ ...prev, nombre: e.target.value }))} className="w-full bg-zinc-950 border border-zinc-800 rounded px-3 py-2 text-white" />
+              <label className="block text-sm font-medium text-gray-700 mb-1">Nombre Completo *</label>
+              <input type="text" value={newClient.nombre} onChange={e => setNewClient(prev => ({ ...prev, nombre: e.target.value }))} className="w-full bg-white border border-gray-300 rounded px-3 py-2 text-black focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500" />
             </div>
             <div>
-              <label className="block text-sm font-medium text-zinc-300 mb-1">Teléfono</label>
-              <input type="text" value={newClient.tel} onChange={e => setNewClient(prev => ({ ...prev, tel: e.target.value }))} className="w-full bg-zinc-950 border border-zinc-800 rounded px-3 py-2 text-white" />
+              <label className="block text-sm font-medium text-gray-700 mb-1">Teléfono</label>
+              <input type="text" value={newClient.tel} onChange={e => setNewClient(prev => ({ ...prev, tel: e.target.value }))} className="w-full bg-white border border-gray-300 rounded px-3 py-2 text-black focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500" />
             </div>
             <div>
-              <label className="block text-sm font-medium text-zinc-300 mb-1">DNI</label>
-              <input type="text" value={newClient.dni} onChange={e => setNewClient(prev => ({ ...prev, dni: e.target.value }))} className="w-full bg-zinc-950 border border-zinc-800 rounded px-3 py-2 text-white" />
+              <label className="block text-sm font-medium text-gray-700 mb-1">DNI</label>
+              <input type="text" value={newClient.dni} onChange={e => setNewClient(prev => ({ ...prev, dni: e.target.value }))} className="w-full bg-white border border-gray-300 rounded px-3 py-2 text-black focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500" />
             </div>
             <div>
-              <label className="block text-sm font-medium text-zinc-300 mb-1">Ciudad</label>
-              <input type="text" value={newClient.ciudad} onChange={e => setNewClient(prev => ({ ...prev, ciudad: e.target.value }))} className="w-full bg-zinc-950 border border-zinc-800 rounded px-3 py-2 text-white" />
+              <label className="block text-sm font-medium text-gray-700 mb-1">Ciudad</label>
+              <input type="text" value={newClient.ciudad} onChange={e => setNewClient(prev => ({ ...prev, ciudad: e.target.value }))} className="w-full bg-white border border-gray-300 rounded px-3 py-2 text-black focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500" />
             </div>
           </div>
         ) : (
           <>
-            <div className="p-4 border-b border-zinc-800 flex gap-2">
+            <div className="p-4 border-b border-gray-200 flex gap-2">
               <div className="relative flex-1">
-                <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400" />
+                <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
                 <input 
                   type="text"
                   autoFocus
                   placeholder="Buscar por nombre o DNI..." 
                   value={search} 
                   onChange={e => setSearch(e.target.value)} 
-                  className="w-full bg-zinc-950 border border-zinc-700 rounded-lg pl-9 pr-3 py-2 text-white outline-none focus:border-purple-500" 
+                  className="w-full bg-white border border-gray-300 rounded-lg pl-9 pr-3 py-2 text-black outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500" 
                 />
               </div>
-              <Button onClick={() => setIsCreatingClient(true)} variant="outline" className="bg-zinc-800 border-zinc-700 hover:bg-zinc-700 text-zinc-200">
+              <Button onClick={() => setIsCreatingClient(true)} variant="outline" className="bg-white border-gray-300 hover:bg-gray-50 text-gray-700">
                 <Edit2 className="w-4 h-4" />
               </Button>
             </div>
 
             <div className="flex-1 overflow-y-auto p-2">
               {isLoading ? (
-                <p className="text-center text-zinc-500 py-4">Cargando...</p>
+                <p className="text-center text-gray-500 py-4">Cargando...</p>
               ) : filteredClients.length === 0 ? (
-                <p className="text-center text-zinc-500 py-4">No se encontraron clientes.</p>
+                <p className="text-center text-gray-500 py-4">No se encontraron clientes.</p>
               ) : (
                 <div className="space-y-1">
                   {filteredClients.map(c => (
@@ -115,13 +115,13 @@ export function ModalBuscarCliente({ isOpen, onClose, onSelect }: ModalBuscarCli
                         onSelect(c);
                         onClose();
                       }}
-                      className="w-full text-left px-4 py-3 rounded-lg hover:bg-zinc-800 focus:bg-zinc-800 outline-none transition-colors group flex justify-between items-center"
+                      className="w-full text-left px-4 py-3 rounded-lg hover:bg-gray-50 focus:bg-gray-50 outline-none transition-colors group flex justify-between items-center"
                     >
                       <div>
-                        <p className="text-sm font-medium text-zinc-200 group-hover:text-white">
+                        <p className="text-sm font-medium text-black">
                           {c.nombre}
                         </p>
-                        <p className="text-xs text-zinc-500">
+                        <p className="text-xs text-gray-500">
                           {c.dni ? `DNI: ${c.dni} | ` : ''} {c.tel}
                         </p>
                       </div>
@@ -134,11 +134,11 @@ export function ModalBuscarCliente({ isOpen, onClose, onSelect }: ModalBuscarCli
         )}
 
         {isCreatingClient && (
-          <div className="p-4 border-t border-zinc-800 flex justify-end gap-2">
-            <Button variant="outline" onClick={() => setIsCreatingClient(false)} className="border-zinc-700 hover:bg-zinc-800 text-zinc-300">
+          <div className="p-4 border-t border-gray-200 flex justify-end gap-2">
+            <Button variant="outline" onClick={() => setIsCreatingClient(false)} className="border-gray-300 hover:bg-gray-50 text-gray-700">
               Volver a buscar
             </Button>
-            <Button onClick={handleCreateClient} disabled={isCreating || !newClient.nombre} className="bg-purple-600 hover:bg-purple-700 text-white">
+            <Button onClick={handleCreateClient} disabled={isCreating || !newClient.nombre} className="bg-cyan-600 hover:bg-cyan-500 text-white">
               Guardar Cliente
             </Button>
           </div>

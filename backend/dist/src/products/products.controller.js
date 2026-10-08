@@ -47,10 +47,12 @@ let ProductsController = class ProductsController {
     async createMany(createProductDtos) {
         return this.productsService.createMany(createProductDtos);
     }
-    async findAll(page, limit, search, category, condition) {
+    async findAll(page, limit, search, category, condition, minPrice, maxPrice, sortBy) {
         const pageNumber = page ? parseInt(page, 10) : 1;
         const limitNumber = limit ? parseInt(limit, 10) : 12;
-        return this.productsService.findAll(pageNumber, limitNumber, search, category, condition);
+        const minPriceNumber = minPrice ? parseFloat(minPrice) : undefined;
+        const maxPriceNumber = maxPrice ? parseFloat(maxPrice) : undefined;
+        return this.productsService.findAll(pageNumber, limitNumber, search, category, condition, minPriceNumber, maxPriceNumber, sortBy);
     }
     async findOne(id) {
         return this.productsService.findOne(+id);
@@ -99,8 +101,11 @@ __decorate([
     __param(2, (0, common_1.Query)('search')),
     __param(3, (0, common_1.Query)('category')),
     __param(4, (0, common_1.Query)('condition')),
+    __param(5, (0, common_1.Query)('minPrice')),
+    __param(6, (0, common_1.Query)('maxPrice')),
+    __param(7, (0, common_1.Query)('sortBy')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, String, String, String, String]),
+    __metadata("design:paramtypes", [String, String, String, String, String, String, String, String]),
     __metadata("design:returntype", Promise)
 ], ProductsController.prototype, "findAll", null);
 __decorate([

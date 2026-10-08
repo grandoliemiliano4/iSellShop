@@ -21,7 +21,7 @@ export declare class ProductsService {
         color: string | null;
     }>;
     createMany(createProductDtos: CreateProductDto[]): Promise<Prisma.BatchPayload>;
-    findAll(page?: number, limit?: number, search?: string, category?: string, condition?: string): Promise<{
+    findAll(page?: number, limit?: number, search?: string, category?: string, condition?: string, minPrice?: number, maxPrice?: number, sortBy?: string): Promise<{
         data: {
             stock: number;
             reservations: {
@@ -36,10 +36,28 @@ export declare class ProductsService {
                 date_retiro: Date | null;
                 descuento: number | null;
                 comision: number | null;
+                total: number | null;
                 last_modification: Date;
                 reservedAt: Date;
                 expiresAt: Date;
             }[];
+            usedDetail: {
+                id: number;
+                imei: string;
+                bateria: number;
+                microfono: boolean;
+                pantalla: boolean;
+                camara_trasera: boolean;
+                camara_frontal: boolean;
+                parlante: boolean;
+                face_id: boolean;
+                bordes: string;
+                garantia_hasta: Date | null;
+                descripcion: string | null;
+                fecha_ingreso: Date;
+                fecha_egreso: Date | null;
+                productId: number;
+            } | null;
             id: number;
             name: string;
             createdAt: Date;
@@ -59,6 +77,24 @@ export declare class ProductsService {
         };
     }>;
     findOne(id: number): Promise<{
+        usedDetail: {
+            id: number;
+            imei: string;
+            bateria: number;
+            microfono: boolean;
+            pantalla: boolean;
+            camara_trasera: boolean;
+            camara_frontal: boolean;
+            parlante: boolean;
+            face_id: boolean;
+            bordes: string;
+            garantia_hasta: Date | null;
+            descripcion: string | null;
+            fecha_ingreso: Date;
+            fecha_egreso: Date | null;
+            productId: number;
+        } | null;
+    } & {
         id: number;
         name: string;
         createdAt: Date;

@@ -19,7 +19,7 @@ export declare class ProductsController {
         color: string | null;
     }>;
     createMany(createProductDtos: CreateProductDto[]): Promise<import("@prisma/client").Prisma.BatchPayload>;
-    findAll(page?: string, limit?: string, search?: string, category?: string, condition?: string): Promise<{
+    findAll(page?: string, limit?: string, search?: string, category?: string, condition?: string, minPrice?: string, maxPrice?: string, sortBy?: string): Promise<{
         data: {
             stock: number;
             reservations: {
@@ -34,10 +34,28 @@ export declare class ProductsController {
                 date_retiro: Date | null;
                 descuento: number | null;
                 comision: number | null;
+                total: number | null;
                 last_modification: Date;
                 reservedAt: Date;
                 expiresAt: Date;
             }[];
+            usedDetail: {
+                id: number;
+                imei: string;
+                bateria: number;
+                microfono: boolean;
+                pantalla: boolean;
+                camara_trasera: boolean;
+                camara_frontal: boolean;
+                parlante: boolean;
+                face_id: boolean;
+                bordes: string;
+                garantia_hasta: Date | null;
+                descripcion: string | null;
+                fecha_ingreso: Date;
+                fecha_egreso: Date | null;
+                productId: number;
+            } | null;
             id: number;
             name: string;
             createdAt: Date;
@@ -57,6 +75,24 @@ export declare class ProductsController {
         };
     }>;
     findOne(id: string): Promise<{
+        usedDetail: {
+            id: number;
+            imei: string;
+            bateria: number;
+            microfono: boolean;
+            pantalla: boolean;
+            camara_trasera: boolean;
+            camara_frontal: boolean;
+            parlante: boolean;
+            face_id: boolean;
+            bordes: string;
+            garantia_hasta: Date | null;
+            descripcion: string | null;
+            fecha_ingreso: Date;
+            fecha_egreso: Date | null;
+            productId: number;
+        } | null;
+    } & {
         id: number;
         name: string;
         createdAt: Date;

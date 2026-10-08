@@ -61,32 +61,32 @@ export default function CatalogView() {
   }, [products]);
 
   return (
-    <div className="min-h-screen bg-black">
+    <div className="min-h-screen bg-[#FBFBFD]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="mb-8 text-center">
-          <h1 className="text-2xl md:text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-cyan-400 mb-4 tracking-tight">
+          <h1 className="text-3xl md:text-4xl font-extrabold text-black mb-4 tracking-tight">
             Nuestros Productos
           </h1>
-          <p className="text-gray-400 text-lg max-w-2xl mx-auto">
+          <p className="text-gray-500 text-lg max-w-2xl mx-auto">
             Explora nuestro catálogo de artículos de alta tecnología. Encuentra
             exactamente lo que necesitas para tu setup.
           </p>
         </div>
 
         {/* Filter Bar */}
-        <div className="mb-10 bg-zinc-900/50 border border-zinc-800 rounded-2xl p-6 shadow-xl backdrop-blur-sm">
+        <div className="mb-10 bg-white border border-gray-200 rounded-2xl p-6 shadow-sm">
           <div className="flex flex-col md:flex-row gap-6">
             
             {/* Search */}
             <div className="flex-1">
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 w-5 h-5" />
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
                 <input 
                   type="text" 
                   value={localSearch}
                   onChange={(e) => setLocalSearch(e.target.value)}
                   placeholder="Buscar modelos, colores, accesorios..." 
-                  className="w-full pl-10 pr-4 py-3 bg-black/50 border border-zinc-800 rounded-xl text-gray-200 focus:ring-2 focus:ring-purple-500/50 outline-none transition-all placeholder:text-zinc-600"
+                  className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-black focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500 outline-none transition-all placeholder:text-gray-400"
                 />
               </div>
             </div>
@@ -97,7 +97,7 @@ export default function CatalogView() {
               <select 
                 value={localCategory}
                 onChange={(e) => setLocalCategory(e.target.value)}
-                className="bg-black/50 border border-zinc-800 rounded-xl px-4 py-3 text-gray-300 focus:ring-2 focus:ring-purple-500/50 outline-none transition-all appearance-none cursor-pointer flex-1 md:w-40"
+                className="bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-black focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500 outline-none transition-all appearance-none cursor-pointer flex-1 md:w-40"
               >
                 <option value="">Categorías</option>
                 <option value="iPhone">iPhone</option>
@@ -111,7 +111,7 @@ export default function CatalogView() {
               <select 
                 value={localCondition}
                 onChange={(e) => setLocalCondition(e.target.value)}
-                className="bg-black/50 border border-zinc-800 rounded-xl px-4 py-3 text-gray-300 focus:ring-2 focus:ring-purple-500/50 outline-none transition-all appearance-none cursor-pointer flex-1 md:w-40"
+                className="bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-black focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500 outline-none transition-all appearance-none cursor-pointer flex-1 md:w-40"
               >
                 <option value="">Condición</option>
                 <option value="NUEVO">Nuevo</option>
@@ -125,25 +125,25 @@ export default function CatalogView() {
                   placeholder="Min $" 
                   value={minPrice}
                   onChange={e => setMinPrice(e.target.value)}
-                  className="w-24 bg-black/50 border border-zinc-800 rounded-xl px-3 py-3 text-gray-300 focus:ring-2 focus:ring-purple-500/50 outline-none transition-all placeholder:text-zinc-600"
+                  className="w-24 bg-gray-50 border border-gray-200 rounded-xl px-3 py-3 text-black focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500 outline-none transition-all placeholder:text-gray-400"
                 />
-                <span className="text-zinc-600">-</span>
+                <span className="text-gray-400">-</span>
                 <input 
                   type="number" 
                   placeholder="Max $" 
                   value={maxPrice}
                   onChange={e => setMaxPrice(e.target.value)}
-                  className="w-24 bg-black/50 border border-zinc-800 rounded-xl px-3 py-3 text-gray-300 focus:ring-2 focus:ring-purple-500/50 outline-none transition-all placeholder:text-zinc-600"
+                  className="w-24 bg-gray-50 border border-gray-200 rounded-xl px-3 py-3 text-black focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500 outline-none transition-all placeholder:text-gray-400"
                 />
               </div>
 
               {/* Ordenar Por */}
               <div className="relative flex-1 md:w-48">
-                <SlidersHorizontal className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 w-4 h-4" />
+                <SlidersHorizontal className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
                 <select 
                   value={sortBy}
                   onChange={(e) => setSortBy(e.target.value)}
-                  className="w-full bg-black/50 border border-zinc-800 rounded-xl pl-9 pr-4 py-3 text-gray-300 focus:ring-2 focus:ring-purple-500/50 outline-none transition-all appearance-none cursor-pointer"
+                  className="w-full bg-gray-50 border border-gray-200 rounded-xl pl-9 pr-4 py-3 text-black focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500 outline-none transition-all appearance-none cursor-pointer"
                 >
                   <option value="recent">Más recientes</option>
                   <option value="price_asc">Menor precio</option>
@@ -156,7 +156,7 @@ export default function CatalogView() {
 
         {isLoading ? (
           <div className="flex justify-center items-center py-20">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-500"></div>
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-cyan-500"></div>
           </div>
         ) : error ? (
           <div className="text-center py-12">

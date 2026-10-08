@@ -91,6 +91,7 @@ model Reservation {
   date_retiro       DateTime?
   descuento         Float?
   comision          Float?
+  total             Float?
   
   last_modification DateTime  @updatedAt
   reservedAt        DateTime  @default(now())

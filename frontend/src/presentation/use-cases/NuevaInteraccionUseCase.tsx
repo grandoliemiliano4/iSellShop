@@ -9,7 +9,11 @@ interface NuevaInteraccionUseCaseProps {
   editingReservation?: any;
 }
 
-export function NuevaInteraccionUseCase({ isOpen, onClose, editingReservation }: NuevaInteraccionUseCaseProps) {
+export function NuevaInteraccionUseCase({
+  isOpen,
+  onClose,
+  editingReservation,
+}: NuevaInteraccionUseCaseProps) {
   const { createReservation, updateReservation } = useReservations();
   const { userRole } = useAuthContext();
 
@@ -23,13 +27,17 @@ export function NuevaInteraccionUseCase({ isOpen, onClose, editingReservation }:
     date_retiro: "",
     descuento: "",
     comision: "",
+    total: "",
     reservedAt: "",
   };
 
   const [formData, setFormData] = useState(defaultForm);
+  const [productPrice, setProductPrice] = useState(0);
 
   useEffect(() => {
     if (editingReservation && isOpen) {
+      const pPrice = editingReservation.product?.price || 0;
+      setProductPrice(pPrice);
       setFormData({
         productId: editingReservation.product?.id?.toString() || "",
         clientId: editingReservation.client?.id?.toString() || "",
@@ -37,27 +45,53 @@ export function NuevaInteraccionUseCase({ isOpen, onClose, editingReservation }:
         observations: editingReservation.observations || "",
         tipo_interaccion: editingReservation.tipo_interaccion,
         canal_venta: editingReservation.canal_venta || "",
-        date_retiro: editingReservation.date_retiro ? new Date(editingReservation.date_retiro).toISOString().slice(0, 16) : "",
+        date_retiro: editingReservation.date_retiro
+          ? new Date(editingReservation.date_retiro).toISOString().slice(0, 16)
+          : "",
         descuento: editingReservation.descuento?.toString() || "",
         comision: editingReservation.comision?.toString() || "",
-        reservedAt: editingReservation.reservedAt ? new Date(editingReservation.reservedAt).toISOString().slice(0, 10) : "",
+        total: editingReservation.total?.toString() || (pPrice - (editingReservation.descuento || 0)).toString(),
+        reservedAt: editingReservation.reservedAt
+          ? new Date(editingReservation.reservedAt).toISOString().slice(0, 10)
+          : "",
       });
     } else if (isOpen) {
       setFormData(defaultForm);
+      setProductPrice(0);
     }
   }, [editingReservation, isOpen]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    >,
+  ) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData((prev) => {
+      const next = { ...prev, [name]: value };
+      if (name === "descuento") {
+        const desc = Number(value) || 0;
+        next.total = (productPrice - desc).toString();
+      }
+      return next;
+    });
   };
 
-  const handleProductSelect = (productId: number | null) => {
-    setFormData(prev => ({ ...prev, productId: productId ? productId.toString() : "" }));
+  const handleProductSelect = (productId: number | null, price?: number) => {
+    const pPrice = price || 0;
+    setProductPrice(pPrice);
+    setFormData((prev) => ({
+      ...prev,
+      productId: productId ? productId.toString() : "",
+      total: productId ? (pPrice - (Number(prev.descuento) || 0)).toString() : ""
+    }));
   };
 
   const handleClientSelect = (clientId: number | null) => {
-    setFormData(prev => ({ ...prev, clientId: clientId ? clientId.toString() : "" }));
+    setFormData((prev) => ({
+      ...prev,
+      clientId: clientId ? clientId.toString() : "",
+    }));
   };
 
   const handleSave = async (e: React.FormEvent) => {
@@ -76,17 +110,21 @@ export function NuevaInteraccionUseCase({ isOpen, onClose, editingReservation }:
         canal_venta: formData.canal_venta,
         date_retiro: formData.date_retiro || undefined,
         descuento: formData.descuento ? Number(formData.descuento) : undefined,
+        total: formData.total ? Number(formData.total) : undefined,
       };
 
       if (userRole === "ADMIN") {
-        payload.comision = formData.comision ? Number(formData.comision) : undefined;
+        payload.comision = formData.comision
+          ? Number(formData.comision)
+          : undefined;
         if (formData.reservedAt) {
           payload.reservedAt = new Date(formData.reservedAt).toISOString();
         }
       }
 
       if (editingReservation) {
-        if (!updateReservation) throw new Error("updateReservation no está disponible");
+        if (!updateReservation)
+          throw new Error("updateReservation no está disponible");
         await updateReservation({ id: editingReservation.id, ...payload });
       } else {
         await createReservation(payload);
@@ -97,14 +135,14 @@ export function NuevaInteraccionUseCase({ isOpen, onClose, editingReservation }:
     }
   };
 
-  const initialProductName = editingReservation?.product 
-    ? `${editingReservation.product.name} ${editingReservation.product.capacity ? editingReservation.product.capacity + 'GB ' : ''}${editingReservation.product.color || ''}`
+  const initialProductName = editingReservation?.product
+    ? `${editingReservation.product.name} ${editingReservation.product.capacity ? editingReservation.product.capacity + "GB " : ""}${editingReservation.product.color || ""}`
     : "";
 
   const initialClientName = editingReservation?.client?.nombre || "";
 
   return (
-    <ModalNuevaInteraccion 
+    <ModalNuevaInteraccion
       isOpen={isOpen}
       onClose={onClose}
       formData={formData}
