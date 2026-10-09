@@ -140,7 +140,7 @@ export function RegisterView({
         <button
           type="submit"
           disabled={status === 'loading'}
-          className="w-full py-3 px-4 rounded-xl bg-black text-white font-medium hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2 focus:ring-offset-white transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full py-3 px-4 rounded-xl bg-cyan-600 text-white font-medium hover:bg-cyan-500 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2 focus:ring-offset-white transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
         >
           {status === 'loading' ? 'Creando cuenta...' : 'Registrarse'}
         </button>

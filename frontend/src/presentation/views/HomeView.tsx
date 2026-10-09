@@ -55,7 +55,7 @@ export function HomeView() {
         ))}
 
         <div className="relative z-10 text-center px-4 max-w-4xl mx-auto pt-32 h-[800px] flex flex-col items-center justify-center">
-          <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-black via-gray-700 to-gray-500 pb-2 my-18">
+          <h1 className="text-xl md:text-6xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-black via-gray-700 to-gray-500 pb-2 my-18">
             Llega el nuevo 18 Pro.
           </h1>
 
@@ -69,7 +69,7 @@ export function HomeView() {
                     : "opacity-0 translate-y-4 pointer-events-none"
                 }`}
               >
-                <p className="text-lg md:text-2xl text-gray-100 max-w-3xl mx-auto leading-relaxed">
+                <p className="text-lg md:text-xl text-gray-100 max-w-3xl mx-auto leading-relaxed">
                   {slide.subtitle}
                 </p>
               </div>

@@ -12,6 +12,8 @@ model user {
   email     String   @unique(map: "User_email_key")
   password  String
   role      String   @default("user")
+  dni       String?
+  ciudad    String?
   reservations Reservation[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

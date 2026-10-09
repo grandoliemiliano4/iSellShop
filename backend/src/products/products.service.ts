@@ -225,11 +225,6 @@ export class ProductsService {
             }
           }
         }),
-        ...(productData.condition === 'NUEVO' && {
-          usedDetail: {
-            delete: true 
-        }).valueOf() ? {} : {} // If changing USADO to NUEVO we probably want to delete, but for now Prisma's cascade or ignore is safer.
-        // Actually I won't delete it just in case, or I can safely do it. Let's just leave it as is if it changes to NUEVO.
       },
     });
   }

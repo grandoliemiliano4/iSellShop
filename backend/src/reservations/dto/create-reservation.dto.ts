@@ -47,6 +47,10 @@ export class CreateReservationDto {
   comision?: number;
 
   @IsOptional()
+  @IsNumber()
+  total?: number;
+
+  @IsOptional()
   @IsString()
   expiresAt?: string;
 }

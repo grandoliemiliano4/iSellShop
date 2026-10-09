@@ -2,7 +2,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useAuthContext } from '../presentation/providers/AuthTokenProvider';
 import HttpClient from '../infraestructure/http/httpClient';
 
-export type User = { id: number; name: string; email: string; role: string; };
+export type User = { id: number; name: string; email: string; role: string; password?: string };
 
 const httpClient = new HttpClient();
 
@@ -24,6 +24,12 @@ export function useUsers() {
     mutationFn: async (user: Partial<User>) => {
       const isEditing = !!user.id;
       const { id, ...userData } = user;
+      
+      // Prevent sending empty password on edit
+      if (isEditing && !userData.password) {
+        delete userData.password;
+      }
+      
       const body = isEditing ? userData : user;
 
       if (isEditing) {

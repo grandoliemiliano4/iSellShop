@@ -62,9 +62,22 @@ let ReservationsService = class ReservationsService {
         });
     }
     update(id, updateReservationDto) {
+        const dataToUpdate = { ...updateReservationDto };
+        if (updateReservationDto.date_retiro !== undefined) {
+            dataToUpdate.date_retiro = updateReservationDto.date_retiro ? new Date(updateReservationDto.date_retiro) : null;
+        }
+        if (updateReservationDto.reservedAt !== undefined) {
+            dataToUpdate.reservedAt = updateReservationDto.reservedAt ? new Date(updateReservationDto.reservedAt) : new Date();
+        }
+        if (updateReservationDto.last_modification !== undefined) {
+            dataToUpdate.last_modification = updateReservationDto.last_modification ? new Date(updateReservationDto.last_modification) : new Date();
+        }
+        if (updateReservationDto.expiresAt !== undefined) {
+            dataToUpdate.expiresAt = updateReservationDto.expiresAt ? new Date(updateReservationDto.expiresAt) : new Date();
+        }
         return this.prisma.reservation.update({
             where: { id },
-            data: updateReservationDto,
+            data: dataToUpdate,
         });
     }
     remove(id) {

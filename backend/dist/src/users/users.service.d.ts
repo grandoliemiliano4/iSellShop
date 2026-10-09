@@ -12,6 +12,8 @@ export declare class UsersService {
         name: string;
         password: string;
         role: string;
+        dni: string | null;
+        ciudad: string | null;
         createdAt: Date;
         updatedAt: Date;
     }>;
@@ -21,6 +23,8 @@ export declare class UsersService {
         name: string;
         password: string;
         role: string;
+        dni: string | null;
+        ciudad: string | null;
         createdAt: Date;
         updatedAt: Date;
     }>;
@@ -30,6 +34,8 @@ export declare class UsersService {
         name: string;
         password: string;
         role: string;
+        dni: string | null;
+        ciudad: string | null;
         createdAt: Date;
         updatedAt: Date;
     }>;

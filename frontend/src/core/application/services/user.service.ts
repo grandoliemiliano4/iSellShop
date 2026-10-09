@@ -30,6 +30,23 @@ class UserService {
 
     return response.json();
   }
+
+  static async updateProfile(id: number, data: { dni?: string; ciudad?: string }, token: string) {
+    const response = await fetch(`http://localhost:3001/users/${id}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`
+      },
+      body: JSON.stringify(data),
+    });
+
+    if (!response.ok) {
+      throw new Error("Error al actualizar el perfil.");
+    }
+
+    return response.json();
+  }
 }
 
 const userService = new UserService();

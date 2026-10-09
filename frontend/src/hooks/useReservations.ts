@@ -26,6 +26,14 @@ export function useReservations() {
     },
   });
 
+  const updateMutation = useMutation({
+    mutationFn: ({ id, ...payload }: { id: number; [key: string]: any }) =>
+      reservationsService.updateReservation(id, payload),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["reservations"] });
+    },
+  });
+
   return {
     reservations: query.data || [],
     isLoading: query.isLoading,
@@ -34,5 +42,6 @@ export function useReservations() {
     isCreating: createMutation.isPending,
     updateStatus: updateStatusMutation.mutateAsync,
     isUpdating: updateStatusMutation.isPending,
+    updateReservation: updateMutation.mutateAsync,
   };
 }

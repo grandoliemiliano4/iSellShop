@@ -61,7 +61,14 @@ let AuthService = class AuthService {
         const isPasswordValid = await bcrypt.compare(pass, user.password);
         if (!isPasswordValid)
             throw new common_1.UnauthorizedException('Credenciales inválidas');
-        const payload = { email: user.email, name: user.name, role: user.role };
+        const payload = {
+            id: user.id,
+            email: user.email,
+            name: user.name,
+            role: user.role,
+            dni: user.dni,
+            ciudad: user.ciudad
+        };
         return {
             message: 'Login exitoso',
             user: payload,

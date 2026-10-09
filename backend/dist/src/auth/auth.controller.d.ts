@@ -6,9 +6,12 @@ export declare class AuthController {
     login(loginDto: LoginDto): Promise<{
         message: string;
         user: {
+            id: number;
             email: string;
             name: string;
             role: string;
+            dni: string | null;
+            ciudad: string | null;
         };
         token: string;
         role: string;

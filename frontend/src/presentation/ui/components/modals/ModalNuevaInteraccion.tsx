@@ -20,6 +20,8 @@ interface ModalNuevaInteraccionProps {
   userRole?: string | null;
   initialProductName?: string;
   initialClientName?: string;
+  error?: string | null;
+  users?: any[];
 }
 
 export function ModalNuevaInteraccion({
@@ -34,6 +36,8 @@ export function ModalNuevaInteraccion({
   userRole,
   initialProductName = "",
   initialClientName = "",
+  error = null,
+  users = [],
 }: ModalNuevaInteraccionProps) {
   const [isProductModalOpen, setIsProductModalOpen] = useState(false);
   const [isClientModalOpen, setIsClientModalOpen] = useState(false);
@@ -163,6 +167,31 @@ export function ModalNuevaInteraccion({
                 </select>
               </div>
 
+              {userRole === "ADMIN" && (
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1 flex items-center justify-between">
+                    Asignar Vendedor
+                  </label>
+                  <select
+                    name="userId"
+                    value={formData.userId || ""}
+                    onChange={onChange}
+                    className="w-full bg-white border border-gray-300 rounded-lg px-3 py-2 text-black outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500"
+                  >
+                    <option value="" disabled>
+                      Seleccionar Vendedor...
+                    </option>
+                    {users
+                      ?.filter((u) => u.role?.toLowerCase() === "vendedor")
+                      .map((u) => (
+                        <option key={u.id} value={u.id}>
+                          {u.name}
+                        </option>
+                      ))}
+                  </select>
+                </div>
+              )}
+
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Canal de Venta
@@ -260,6 +289,12 @@ export function ModalNuevaInteraccion({
                 className="w-full bg-white border border-gray-300 rounded-lg px-3 py-2 text-black outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500"
               />
             </div>
+
+            {error && (
+              <div className="p-3 rounded-xl bg-red-50 border border-red-100 text-red-600 text-sm text-center">
+                {error}
+              </div>
+            )}
 
             <div className="flex justify-end gap-3 pt-4 border-t border-gray-200 mt-4">
               <Button

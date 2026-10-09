@@ -10,4 +10,10 @@ export class CreateUserDto {
   @IsString()
   @IsOptional()
   role?: string;
+  @IsString()
+  @IsOptional()
+  dni?: string;
+  @IsString()
+  @IsOptional()
+  ciudad?: string;
 }

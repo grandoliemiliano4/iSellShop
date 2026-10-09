@@ -16,6 +16,8 @@ class CreateUserDto {
     email;
     password;
     role;
+    dni;
+    ciudad;
 }
 exports.CreateUserDto = CreateUserDto;
 __decorate([
@@ -36,4 +38,14 @@ __decorate([
     (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)
 ], CreateUserDto.prototype, "role", void 0);
+__decorate([
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsOptional)(),
+    __metadata("design:type", String)
+], CreateUserDto.prototype, "dni", void 0);
+__decorate([
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsOptional)(),
+    __metadata("design:type", String)
+], CreateUserDto.prototype, "ciudad", void 0);
 //# sourceMappingURL=create-user.dto.js.map

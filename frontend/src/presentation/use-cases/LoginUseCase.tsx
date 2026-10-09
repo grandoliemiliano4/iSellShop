@@ -26,7 +26,7 @@ export function LoginUseCase({ setShowRegister }: LoginUseCaseProps) {
 
     try {
       const response = await authService.login({ email, password });
-      login(response.token, response.user.name, response.user.role);
+      login(response.token, response.user.name, response.user.role, response.user.id, response.user.email, response.user.dni, response.user.ciudad);
       if (response.user.role === 'ADMIN') {
         router.push('/dashboard');
       } else {

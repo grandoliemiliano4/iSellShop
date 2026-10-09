@@ -7,6 +7,7 @@ import Image from "next/image";
 import ProductSearch from "../components/ProductSearch";
 import { useAuthContext } from "../../providers/AuthTokenProvider";
 import { Menu, ChevronDown, Package, Smartphone, Laptop, Tablet, Headphones, Phone } from "lucide-react";
+import { ModalPerfil } from "../components/modals/ModalPerfil";
 
 interface HeaderProps {
   onMenuToggle?: () => void;
@@ -15,6 +16,7 @@ interface HeaderProps {
 export default function Header({ onMenuToggle }: HeaderProps) {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isProductsDropdownOpen, setIsProductsDropdownOpen] = useState(false);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
   const router = useRouter();
 
   const { isAuthenticated, userName, userRole, logout } = useAuthContext();
@@ -121,14 +123,17 @@ export default function Header({ onMenuToggle }: HeaderProps) {
 
           {isAuthenticated ? (
             <div className="flex items-center gap-3">
-              <div className="flex items-center gap-2">
+              <button
+                onClick={() => setIsProfileOpen(true)}
+                className="flex items-center gap-2 hover:bg-gray-50 px-2 py-1 rounded-lg transition-colors focus:outline-none"
+              >
                 <div className="w-8 h-8 rounded-full bg-cyan-500 flex items-center justify-center text-sm font-bold text-white shadow-md">
                   {userName ? userName.charAt(0).toUpperCase() : "U"}
                 </div>
                 <span className="text-sm font-medium text-gray-700 hidden sm:block">
                   {userName || "Usuario"}
                 </span>
-              </div>
+              </button>
               <button
                 onClick={handleLogout}
                 className="text-xs font-medium text-gray-400 hover:text-red-500 transition-colors"
@@ -150,6 +155,13 @@ export default function Header({ onMenuToggle }: HeaderProps) {
       <ProductSearch
         isOpen={isSearchOpen}
         onClose={() => setIsSearchOpen(false)}
+      />
+
+      <ModalPerfil
+        isOpen={isProfileOpen}
+        onClose={() => setIsProfileOpen(false)}
+        userName={userName}
+        userRole={userRole}
       />
     </header>
   );

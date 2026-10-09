@@ -8,7 +8,7 @@ export default function LoginPage() {
   const [showRegister, setShowRegister] = useState(false);
 
   return (
-    <div className="flex-1 flex flex-col bg-black text-gray-300">
+    <div className="flex-1 flex flex-col bg-gray-50 text-black">
 
       <main className="flex-grow flex flex-col items-center justify-center p-4">
         {showRegister ? (

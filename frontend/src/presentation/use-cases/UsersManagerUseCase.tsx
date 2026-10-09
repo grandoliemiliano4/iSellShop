@@ -11,6 +11,7 @@ export function UsersManagerUseCase() {
     name: "",
     email: "",
     role: "user",
+    password: "",
   });
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -25,10 +26,10 @@ export function UsersManagerUseCase() {
     setIsSuccess(false);
     if (user) {
       setEditingUser(user);
-      setFormData({ name: user.name, email: user.email, role: user.role });
+      setFormData({ name: user.name, email: user.email, role: user.role, password: "" });
     } else {
       setEditingUser(null);
-      setFormData({ name: "", email: "", role: "user" });
+      setFormData({ name: "", email: "", role: "user", password: "" });
     }
     setIsModalOpen(true);
   };
@@ -110,7 +111,8 @@ export function UsersManagerUseCase() {
         !editingUser ||
         formData.name !== editingUser.name ||
         formData.email !== editingUser.email ||
-        formData.role !== editingUser.role
+        formData.role !== editingUser.role ||
+        formData.password !== ""
       }
     />
   );

@@ -11,5 +11,6 @@ export declare class CreateReservationDto {
     date_retiro?: string;
     descuento?: number;
     comision?: number;
+    total?: number;
     expiresAt?: string;
 }

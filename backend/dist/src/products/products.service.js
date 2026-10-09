@@ -231,11 +231,6 @@ let ProductsService = class ProductsService {
                         }
                     }
                 }),
-                ...(productData.condition === 'NUEVO' && {
-                    usedDetail: {
-                        delete: true
-                    }
-                }).valueOf() ? {} : {}
             },
         });
     }

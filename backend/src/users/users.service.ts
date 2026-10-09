@@ -36,9 +36,13 @@ export class UsersService {
 
   async update(id: number, updateUserDto: UpdateUserDto) {
     try {
+      const dataToUpdate = { ...updateUserDto };
+      if (dataToUpdate.password) {
+        dataToUpdate.password = await bcrypt.hash(dataToUpdate.password, 10);
+      }
       return await this.prisma.user.update({
         where: { id },
-        data: updateUserDto,
+        data: dataToUpdate,
       });
     } catch (error) {
       throw new NotFoundException('Usuario no encontrado');

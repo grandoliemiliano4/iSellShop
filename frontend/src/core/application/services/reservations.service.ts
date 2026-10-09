@@ -15,6 +15,10 @@ class ReservationsService {
   async updateReservationStatus(id: number, status: string): Promise<Reservation> {
     return httpClient.patch<Reservation>(`/reservations/${id}`, { status });
   }
+
+  async updateReservation(id: number, payload: any): Promise<Reservation> {
+    return httpClient.patch<Reservation>(`/reservations/${id}`, payload);
+  }
 }
 
 const reservationsService = new ReservationsService();

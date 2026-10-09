@@ -21,7 +21,14 @@ export class AuthService {
       throw new UnauthorizedException('Credenciales inválidas');
 
     // Verificar que exista y coincida su contraseña
-    const payload = { email: user.email, name: user.name, role: user.role };
+    const payload = { 
+      id: user.id, 
+      email: user.email, 
+      name: user.name, 
+      role: user.role, 
+      dni: user.dni, 
+      ciudad: user.ciudad 
+    };
 
     return {
       message: 'Login exitoso',

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { ModalNuevaInteraccion } from "../ui/components/modals/ModalNuevaInteraccion";
 import { useReservations } from "../../hooks/useReservations";
 import { useAuthContext } from "../providers/AuthTokenProvider";
+import { useUsers } from "../../hooks/useUsers";
 
 interface NuevaInteraccionUseCaseProps {
   isOpen: boolean;
@@ -15,11 +16,13 @@ export function NuevaInteraccionUseCase({
   editingReservation,
 }: NuevaInteraccionUseCaseProps) {
   const { createReservation, updateReservation } = useReservations();
-  const { userRole } = useAuthContext();
+  const { userRole, userId } = useAuthContext();
+  const { users } = useUsers();
 
   const defaultForm = {
     productId: "",
     clientId: "",
+    userId: "",
     status: "Pendiente",
     observations: "",
     tipo_interaccion: "Personal",
@@ -33,14 +36,17 @@ export function NuevaInteraccionUseCase({
 
   const [formData, setFormData] = useState(defaultForm);
   const [productPrice, setProductPrice] = useState(0);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (editingReservation && isOpen) {
       const pPrice = editingReservation.product?.price || 0;
       setProductPrice(pPrice);
+      setError(null);
       setFormData({
         productId: editingReservation.product?.id?.toString() || "",
         clientId: editingReservation.client?.id?.toString() || "",
+        userId: editingReservation.user?.id?.toString() || userId?.toString() || "",
         status: editingReservation.status,
         observations: editingReservation.observations || "",
         tipo_interaccion: editingReservation.tipo_interaccion,
@@ -56,10 +62,11 @@ export function NuevaInteraccionUseCase({
           : "",
       });
     } else if (isOpen) {
-      setFormData(defaultForm);
+      setFormData({ ...defaultForm, userId: userId?.toString() || "" });
       setProductPrice(0);
+      setError(null);
     }
-  }, [editingReservation, isOpen]);
+  }, [editingReservation, isOpen, userId]);
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -96,19 +103,22 @@ export function NuevaInteraccionUseCase({
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formData.productId) return alert("Selecciona un producto");
-    if (!formData.clientId) return alert("Selecciona un cliente");
+    setError(null);
+
+    if (!formData.productId) return setError("Selecciona un producto");
+    if (!formData.clientId) return setError("Selecciona un cliente");
+    if (!formData.userId) return setError("Selecciona un vendedor");
 
     try {
       const payload: any = {
         productId: Number(formData.productId),
         clientId: Number(formData.clientId),
-        userId: 1, // <--- TODO: Fetch from auth state
+        userId: Number(formData.userId),
         status: formData.status,
         observations: formData.observations,
         tipo_interaccion: formData.tipo_interaccion,
         canal_venta: formData.canal_venta,
-        date_retiro: formData.date_retiro || undefined,
+        date_retiro: formData.date_retiro ? new Date(formData.date_retiro).toISOString() : undefined,
         descuento: formData.descuento ? Number(formData.descuento) : undefined,
         total: formData.total ? Number(formData.total) : undefined,
       };
@@ -130,8 +140,9 @@ export function NuevaInteraccionUseCase({
         await createReservation(payload);
       }
       onClose(); // Cerrar modal después de crear exitosamente
-    } catch (error) {
-      alert("Ocurrió un error al guardar la interacción");
+    } catch (err) {
+      console.error(err);
+      setError("Ocurrió un error al guardar la interacción");
     }
   };
 
@@ -152,8 +163,10 @@ export function NuevaInteraccionUseCase({
       onSave={handleSave}
       isEditing={!!editingReservation}
       userRole={userRole}
+      users={users}
       initialProductName={initialProductName}
       initialClientName={initialClientName}
+      error={error}
     />
   );
 }

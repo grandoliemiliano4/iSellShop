@@ -6,22 +6,22 @@ export declare class ClientsService {
     constructor(prisma: PrismaService);
     create(createClientDto: CreateClientDto): import("@prisma/client").Prisma.Prisma__ClientClient<{
         id: number;
+        dni: string | null;
+        ciudad: string | null;
         createdAt: Date;
         updatedAt: Date;
         nombre: string;
         tel: string | null;
-        ciudad: string | null;
-        dni: string | null;
         sexo: string | null;
     }, never, import("@prisma/client/runtime/client").DefaultArgs, import("@prisma/client").Prisma.PrismaClientOptions>;
     findAll(): import("@prisma/client").Prisma.PrismaPromise<{
         id: number;
+        dni: string | null;
+        ciudad: string | null;
         createdAt: Date;
         updatedAt: Date;
         nombre: string;
         tel: string | null;
-        ciudad: string | null;
-        dni: string | null;
         sexo: string | null;
     }[]>;
     findOne(id: number): import("@prisma/client").Prisma.Prisma__ClientClient<({
@@ -44,32 +44,32 @@ export declare class ClientsService {
         }[];
     } & {
         id: number;
+        dni: string | null;
+        ciudad: string | null;
         createdAt: Date;
         updatedAt: Date;
         nombre: string;
         tel: string | null;
-        ciudad: string | null;
-        dni: string | null;
         sexo: string | null;
     }) | null, null, import("@prisma/client/runtime/client").DefaultArgs, import("@prisma/client").Prisma.PrismaClientOptions>;
     update(id: number, updateClientDto: UpdateClientDto): import("@prisma/client").Prisma.Prisma__ClientClient<{
         id: number;
+        dni: string | null;
+        ciudad: string | null;
         createdAt: Date;
         updatedAt: Date;
         nombre: string;
         tel: string | null;
-        ciudad: string | null;
-        dni: string | null;
         sexo: string | null;
     }, never, import("@prisma/client/runtime/client").DefaultArgs, import("@prisma/client").Prisma.PrismaClientOptions>;
     remove(id: number): import("@prisma/client").Prisma.Prisma__ClientClient<{
         id: number;
+        dni: string | null;
+        ciudad: string | null;
         createdAt: Date;
         updatedAt: Date;
         nombre: string;
         tel: string | null;
-        ciudad: string | null;
-        dni: string | null;
         sexo: string | null;
     }, never, import("@prisma/client/runtime/client").DefaultArgs, import("@prisma/client").Prisma.PrismaClientOptions>;
 }

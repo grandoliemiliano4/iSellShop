@@ -24,6 +24,7 @@ class CreateReservationDto {
     date_retiro;
     descuento;
     comision;
+    total;
     expiresAt;
 }
 exports.CreateReservationDto = CreateReservationDto;
@@ -84,6 +85,11 @@ __decorate([
     (0, class_validator_1.IsNumber)(),
     __metadata("design:type", Number)
 ], CreateReservationDto.prototype, "comision", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsNumber)(),
+    __metadata("design:type", Number)
+], CreateReservationDto.prototype, "total", void 0);
 __decorate([
     (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.IsString)(),

@@ -43,12 +43,12 @@ export declare class ReservationsController {
         };
         client: {
             id: number;
+            dni: string | null;
+            ciudad: string | null;
             createdAt: Date;
             updatedAt: Date;
             nombre: string;
             tel: string | null;
-            ciudad: string | null;
-            dni: string | null;
             sexo: string | null;
         };
     } & {
@@ -90,12 +90,12 @@ export declare class ReservationsController {
         };
         client: {
             id: number;
+            dni: string | null;
+            ciudad: string | null;
             createdAt: Date;
             updatedAt: Date;
             nombre: string;
             tel: string | null;
-            ciudad: string | null;
-            dni: string | null;
             sexo: string | null;
         };
     } & {
